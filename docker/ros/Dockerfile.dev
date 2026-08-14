@@ -57,7 +57,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         --event-handlers console_direct+ \
     && rm -rf "${ORBBEC_WS}/src" "${ORBBEC_WS}/build" "${ORBBEC_WS}/log"
 
-RUN /usr/bin/python3 -m pip install --break-system-packages \
+RUN /usr/bin/python3 -m pip install --break-system-packages --ignore-installed \
         "grpcio==${GRPCIO_VERSION}" \
         "grpcio-reflection==${GRPCIO_VERSION}" \
         "grpcio-tools==${GRPCIO_VERSION}" \
