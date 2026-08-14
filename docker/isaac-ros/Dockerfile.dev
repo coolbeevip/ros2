@@ -7,6 +7,7 @@ ARG GRPCIO_VERSION=1.73.0
 ARG GRPCURL_VERSION=1.9.3
 ARG PIPER_SDK_VERSION=0.6.1
 ARG PROTOBUF_VERSION=6.31.1
+ARG PYZMQ_VERSION=27.1.0
 ARG NUMPY_VERSION=1.26.4
 ARG PRE_COMMIT_VERSION=4.6.0
 ARG PYTEST_VERSION=7.4.4
@@ -57,16 +58,18 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     && rm -rf "${ORBBEC_WS}/src" "${ORBBEC_WS}/build" "${ORBBEC_WS}/log"
 
 RUN /usr/bin/python3 -m pip install --break-system-packages \
-        "piper-sdk==${PIPER_SDK_VERSION}" \
-    && /usr/bin/python3 -c "import piper_sdk" \
-    && /usr/bin/python3 -m venv --system-site-packages "${VIRTUAL_ENV}" \
-    && "${VIRTUAL_ENV}/bin/python" -m pip install \
         "grpcio==${GRPCIO_VERSION}" \
         "grpcio-reflection==${GRPCIO_VERSION}" \
         "grpcio-tools==${GRPCIO_VERSION}" \
+        "piper-sdk==${PIPER_SDK_VERSION}" \
+        "protobuf==${PROTOBUF_VERSION}" \
+        "pyzmq==${PYZMQ_VERSION}" \
+    && /usr/bin/python3 -c "import piper_sdk" \
+    && /usr/bin/python3 -c "import zmq; assert zmq.__version__ == '${PYZMQ_VERSION}'" \
+    && /usr/bin/python3 -m venv --system-site-packages "${VIRTUAL_ENV}" \
+    && "${VIRTUAL_ENV}/bin/python" -m pip install \
         "numpy==${NUMPY_VERSION}" \
         "pre-commit==${PRE_COMMIT_VERSION}" \
-        "protobuf==${PROTOBUF_VERSION}" \
         "pytest==${PYTEST_VERSION}" \
         "PyYAML==${PYYAML_VERSION}" \
         "ruff==${RUFF_VERSION}"
